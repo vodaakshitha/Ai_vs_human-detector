@@ -10,6 +10,7 @@ import os
 import json
 import time
 from googletrans import Translator
+from constants import LANGUAGE_NAMES
 
 # Initialize
 translator = Translator()
@@ -45,9 +46,6 @@ if os.path.exists(feedback_logs_file):
             feedback_logs = json.load(f)
     except json.JSONDecodeError:
         feedback_logs = []
-
-from constants import LANGUAGE_NAMES
-
 
 def log_monitor_data(text, label, lang, bert_conf, rf_conf, shap_words, response_ms, translated=None, sentiment_label=None, sentiment_score=None):
     monitor_stats[f"count_{label}"] += 1
