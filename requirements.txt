@@ -1,0 +1,13 @@
+flask
+numpy
+torch
+transformers
+langdetect
+joblib
+shap
+googletrans==4.0.0-rc1
+dash
+plotly
+pandas
+requests
+gunicorn
