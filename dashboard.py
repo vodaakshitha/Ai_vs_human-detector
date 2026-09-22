@@ -3,11 +3,14 @@ from dash import html, dcc, Input, Output, State, callback_context
 import plotly.express as px
 import pandas as pd
 import requests
+import os
 from dash import dash_table
 import json
 import base64
 from io import BytesIO
 from predictor import LANGUAGE_NAMES # Import the language mapping
+
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:5000")
 
 app = dash.Dash(__name__)
 app.title = "AI vs Human Real-Time Dashboard"
@@ -220,7 +223,7 @@ def clear_input_text(n_clicks):
 def perform_prediction(n_clicks, user_input, strategy):
     if n_clicks > 0 and user_input:
         try:
-            response = requests.post("http://localhost:5000/predict", json={"texts": [user_input], "strategy": strategy})
+            response = requests.post(f"{BACKEND_URL}/predict", json={"texts": [user_input], "strategy": strategy})
             response.raise_for_status()
             prediction_data = response.json()[0]
 
@@ -385,7 +388,7 @@ def send_feedback(correct_n, wrong_n, last_prediction_data):
     
     if user_feedback_type and last_prediction_data:
         try:
-            response = requests.post("http://localhost:5000/feedback", json={
+            response = requests.post(f"{BACKEND_URL}/feedback", json={
                 "text": last_prediction_data["text"],
                 "predicted_label": last_prediction_data["predicted_label"],
                 "user_feedback": user_feedback_type
@@ -453,12 +456,12 @@ def update_graphs_and_table(n):
     # Data Fetching 
     try:
         # Fetch monitor logs (which now include sentiment)
-        response_logs = requests.get("http://localhost:5000/get_monitor_logs")
+        response_logs = requests.get(f"{BACKEND_URL}/get_monitor_logs")
         response_logs.raise_for_status()
         logs = response_logs.json()
 
         # Fetch monitor stats (which now include sentiment counts)
-        response_stats = requests.get("http://localhost:5000/get_monitor_stats")
+        response_stats = requests.get(f"{BACKEND_URL}/get_monitor_stats")
         response_stats.raise_for_status()
         stats = response_stats.json()
 
@@ -602,7 +605,7 @@ def update_graphs_and_table(n):
         )
 
     # Feedback Summary Chart
-    feedback_response = requests.get("http://localhost:5000/feedback_summary")
+    feedback_response = requests.get(f"{BACKEND_URL}/feedback_summary")
     feedback_response.raise_for_status()
     feedback_data = feedback_response.json().get("feedback_data", [])
     
@@ -656,7 +659,7 @@ def update_graphs_and_table(n):
 def download_feedback_logs_file(n_clicks):
     if n_clicks > 0:
         try:
-            response = requests.get("http://localhost:5000/download_feedback_logs")
+            response = requests.get(f"{BACKEND_URL}/download_feedback_logs")
             response.raise_for_status()
             feedback_json_data = response.json()
             
