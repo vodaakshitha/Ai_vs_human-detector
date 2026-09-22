@@ -13,7 +13,7 @@ from googletrans import Translator
 
 # Initialize
 translator = Translator()
-bert_model_path = "bert_finetunedfixed_model"
+bert_model_path = "akshithavoda/bert-finetuned-ai-human"
 tokenizer = BertTokenizer.from_pretrained(bert_model_path)
 bert_model = BertForSequenceClassification.from_pretrained(bert_model_path)
 bert_model.eval()
