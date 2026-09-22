@@ -8,7 +8,7 @@ from dash import dash_table
 import json
 import base64
 from io import BytesIO
-from predictor import LANGUAGE_NAMES # Import the language mapping
+from constants import LANGUAGE_NAMES # Import the language mapping
 
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:5000")
 
